@@ -29,8 +29,8 @@ Scope.TriggerLevel(800e-3); % 800 mV for the positive trigger coming from OPA XB
 
 Scope.TBMode('B');
 Scope.TBScaleA(50e-9); % 50 ns/div
-Scope.TBScaleB(1e-9); % 1 ns/div. Change this later to whatever suits your signal.
-Scope.Delay(276.5e-9); % delay 276.5 ns
+Scope.TBScaleB(2e-9); % 1 ns/div. Change this later to whatever suits your signal.
+Scope.Delay(314e-9); % delay, can be 280~400 ns; zoom out to find signal
 
 Scope.ChannelScale(1, 2e-3); % Set Ch1 to 2mV/div;
 Scope.ChannelMode(1, 'AvgStab');
