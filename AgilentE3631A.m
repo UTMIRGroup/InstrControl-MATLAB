@@ -65,8 +65,14 @@ classdef AgilentE3631A
             fprintf(obj.instr_handle, ['OUTP OFF']); 
         end
         
-        function Send(obj,message)
+        
+        %% Utility
+        function write(obj,message)
             fprintf(obj.instr_handle,message);
+        end
+        
+        function output = read(obj)
+            output = fscanf(obj.instr_handle);
         end
         
         function output = query(obj, message)

@@ -1,5 +1,5 @@
-% This is a sample script for initializing the PicoScope when doing a typical experiment at the MRSEC lab, for
-% example, using the OPA to measure detector time response. 
+% This is a sample script for initializing the PicoScope when doing a typical experiment at our own lab, for
+% example, using the 1550 nm fs pulsed laser for measurements
 %
 % Typically, only a single channel is used, synchronized to a fixed trigger signal, and the signal delay with 
 % regard to the trigger is, relatively, a constant value from day to day. Therefore, a lot of the repeated
@@ -25,14 +25,14 @@ Scope.ChannelDisplay([2,3,4], 'off'); % First deal with the other channels
 Scope.ChannelAcquisition([2,3,4], 'off');
 
 Scope.TriggerSource('ExtDirect');
-Scope.TriggerLevel(800e-3); % 800 mV for the positive trigger coming from OPA XB7
+Scope.TriggerLevel(200e-3); % 300 mV for the positive trigger coming from 1550 nm fs
 
 Scope.TBMode('B');
-Scope.TBScaleA(50e-9); % 50 ns/div
-Scope.TBScaleB(2e-9); % 1 ns/div. Change this later to whatever suits your signal.
-Scope.Delay(309e-9); % delay, can be 280~400 ns; zoom out to find signal
+% Scope.TBScaleA(50e-9); % 50 ns/div
+Scope.TBScaleB(500e-12); % 500 ps/div. Change this later to whatever suits your signal.
+Scope.Delay(21.25e-9); % delay, can be 280~400 ns; zoom out to find signal
 
-Scope.ChannelScale(1, 2e-3); % Set Ch1 to 2mV/div;
-Scope.ChannelMode(1, 'AvgStab');
-Scope.ChannelAverage(1, 4096);
+Scope.ChannelScale(1, 50e-3); % Set Ch1 to 50mV/div;
+% Scope.ChannelMode(1, 'AvgStab');
+% Scope.ChannelAverage(1, 4096);
 Scope.ChannelRecLength(1, 8192);
