@@ -28,7 +28,6 @@ classdef PicoScope9341
                 disp(ME.message);
             end
         end
-        
         function close(obj)
             % Release the handle and closes the software panel
             if ishandle(obj.h)
@@ -38,42 +37,12 @@ classdef PicoScope9341
                 disp('Handle invalid, might already be closed');
             end
         end
-        
-        function Settings = ChannelAcqInfo(obj, ch)
-            % Retrieve the channel acquisition settings and save in a struct
+        function Settings = ChannelSettings(obj. ch)
+            % Retrieve the channel settings and save in a struct
             % Example: Settings = Scope.ChannelSettings(1);
-            Settings = struct;
-            
-            Settings.Channel = ch;
-%             Settings.VoltageScale   = obj.h.ExecCommand(['ch',num2str(ch),':scale?']);
-%             Settings.VoltageOffset  = obj.h.ExecCommand(['ch',num2str(ch),':offset?']);
-            
-            AllParameters = obj.h.ExecCommand(['acq:ch',num2str(ch),'?']);
-            SplitParameters = split(AllParameters,';');
-            Settings.AcqMode = SplitParameters{1};
-            Settings.RecordLength = str2double(SplitParameters{end});
-            if size(SplitParameters,1)==4
-                Settings.NAvg = str2double(SplitParameters{2});
-            end
-            
-        end   
-        
-        function Settings = TimeInfo(obj)
-            % Retrieve the time settings and save in a struct
-            % Example: Settings = Scope.TimeSettings;
-            Settings = struct;
-           
-            Settings.TimeScaleA     = obj.h.ExecCommand('TB:ScaleA?');
-            Settings.TimeScaleB     = obj.h.ExecCommand('TB:ScaleB?');
-            Settings.TimeDelay      = obj.h.ExecCommand('TB:Delay?');
-            
-            TriggerSource = obj.h.ExecCommand('Trig:Source?');
-            if isequal(TriggerSource, 'EXTDIRECT')
-            Settings.TriggerLevel   = obj.h.ExecCommand('Trig:ExtDir:Level?');
-            end
-                end
-        
-        %% Changing Channel Settings
+            Settings = struct('Y Scale', 'Y offset', );
+        end
+        %% Channel Settings
         function ChannelDisplay(obj, ch, mode)
             % Turn channel display on/off
             % Example: Scope.ChannelDisplay([2,3,4], 'off');
