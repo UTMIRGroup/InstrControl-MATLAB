@@ -155,8 +155,11 @@ classdef PicoScope9341
         function [data_array] = ReadWav(obj)
             wav_raw = obj.h.ExecCommand('Wfm:Data?');
 %             wav_raw = wav_raw(10:end);
-            data_split = strsplit(wav_raw,',');
-            data_array = str2double(data_split);
+%             data_split1 = strsplit(wav_raw,',');
+            data_split = textscan(wav_raw,'%f','Delimiter',',');
+            data_array = data_split{1}';
+%             data_array = str2double(data_split);
+%             data_array = sscanf(sprintf(' %s',data_split{:}),'%f',[1,Inf]);
         end
         
         function t = TimeAxis(obj)
