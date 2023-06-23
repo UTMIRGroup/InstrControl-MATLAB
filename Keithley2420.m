@@ -12,15 +12,15 @@ classdef Keithley2420
         function obj = Keithley2420(instr_address)
             % Open the instrument at the given address
             try
-                % need to change these lines
-%                 obj.instr_handle = visa('ni','USB0::0x2A80::0x1102::MY59282614::INSTR');
-                obj.instr_handle = visa('ni',instr_address);
-%                 obj.instr_handle.InputBufferSize = 20000;
-                fopen(obj.instr_handle);
+                % visadev is MATLAB's new visa connection interface introduced in R2021a
+                obj.instr_handle = visadev(instr_address);
                 disp('Keithley 2420 connected successfully');
                 obj.write('*RST');
             catch ME
                 disp(ME.message);
+                if strcmp(ME.identifier, 'MATLAB:UndefinedFunction')
+                    disp('If visadev doesn''t exist, check MATLAB version. Needs to be above R2021a')
+                end
             end
         end
         
@@ -61,21 +61,21 @@ classdef Keithley2420
         
         %% Utility
         function write(obj,message)
-            fprintf(obj.instr_handle,message);
+            obj.instr_handle.write(message);
         end
         
         function output = read(obj)
-            output = fscanf(obj.instr_handle);
+            output = obj.instr_handle.readline;
         end
         
         function output = query(obj, message)
             % Query anything using commands from the manual
-            fprintf(obj.instr_handle,message);
-            output = fscanf(obj.instr_handle);
+            obj.instr_handle.write(message);
+            output = obj.instr_handle.readline;
         end
 
         function close(obj)
-            fclose(obj.instr_handle);
+            delete(obj.instr_handle);
             disp('Keithley 2420 instr handle closed');
         end
     end

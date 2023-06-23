@@ -122,6 +122,12 @@ classdef PicoScope9341
             obj.h.ExecCommand(Command);
         end
         
+        function AutoRescale(obj, ch)
+            Waveform = obj.ReadWav;
+            new_scale = round((max(Waveform) - min(Waveform))/3e-3);
+            obj.ChannelScale(ch, new_scale*1e-3);
+        end
+
         %% Timebase Settings
         function TBMode(obj, mode)
             % Timebase modes: A (main), AB (Intensified), B(delayed)
@@ -152,14 +158,28 @@ classdef PicoScope9341
         end
         
         %% Measurements
-        function [data_array] = ReadWav(obj)
+        function data_array = ReadWav(obj)
+            % After a series of tests with strsplit, str2double, and sscanf, 
+            % this seems to be the best configuration (textscan is fastest).
+            % Wfm:Data? command speed is sort of inconsistent, sometimes 
+            % it's 0.023s sometimes it's 0.012s, no idea what's the key factor
             wav_raw = obj.h.ExecCommand('Wfm:Data?');
-%             wav_raw = wav_raw(10:end);
-%             data_split1 = strsplit(wav_raw,',');
             data_split = textscan(wav_raw,'%f','Delimiter',',');
             data_array = data_split{1}';
-%             data_array = str2double(data_split);
-%             data_array = sscanf(sprintf(' %s',data_split{:}),'%f',[1,Inf]);
+        end
+
+        function data_array = ReadWavAvg(obj, n_avg)
+            % Read n_avg numbers of consecutive waveforms and average over them
+            % Can be used together with the scope's internal averages.
+            wav_raw = obj.h.ExecCommand('Wfm:Data?');
+            data_split = textscan(wav_raw, '%f', 'Delimiter',',');
+            data_array = data_split{1}';
+            for i = 2:n_avg
+                wav_raw = obj.h.ExecCommand('Wfm:Data?');
+                data_split = textscan(wav_raw, '%f', 'Delimiter',',');
+                data_array = data_array + data_split{1}';
+            end
+            data_array = data_array/n_avg;
         end
         
         function t = TimeAxis(obj)
