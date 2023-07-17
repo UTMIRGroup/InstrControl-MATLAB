@@ -91,8 +91,9 @@ classdef ThorlabsPowerMeter < matlab.mixin.Copyable
         % (depending on the location where you put this file)
         % This line points to folder 'Thorlabs_DotNet_dll' under the same directory
         % Comment out this line and uncomment next line to use customized dll file directory
-        METERPATHDEFAULT=[pwd '\Thorlabs_DotNet_dll\'];
+%         METERPATHDEFAULT=[pwd '\Thorlabs_DotNet_dll\'];
         %METERPATHDEFAULT=['---Your---Own---Path---'];
+        METERPATHDEFAULT = ['D:\InstrControl-MATLAB\Thorlabs Powermeter\Thorlabs_DotNet_dll\'];
         
         %   *.dll files to be loaded
         %
